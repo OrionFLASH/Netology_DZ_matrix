@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
     public static final int SIZE = 8;
@@ -11,10 +12,13 @@ public class Main {
         System.out.println("Исходная матрица:");
         printMatrix(colors);
 
-        int[][] rotatedColors = rotateMatrix90(colors);
+        int angle = readAngle();
 
-        System.out.println("Повернутая матрица:");
-        printMatrix(rotatedColors);
+
+        int[][] rotated = rotateMatrix(colors, angle);
+        System.out.println("Повернутая матрица на " + angle + " градусов:");
+        printMatrix(rotated);
+
     }
 
     // Заполнение матрицы
@@ -25,6 +29,38 @@ public class Main {
                 matrix[i][j] = random.nextInt(COLOR_COUNT);
             }
         }
+    }
+
+    // Ввод угла
+    private static int readAngle() {
+        Scanner scanner = new Scanner(System.in);
+        int angle = 0;
+        boolean correct = false;
+        while (!correct) {
+            System.out.print("Введите угол поворота (90, 180 или 270): ");
+            if (scanner.hasNextInt()) {
+                angle = scanner.nextInt();
+                if (angle == 90 || angle == 180 || angle == 270) {
+                    correct = true;
+                } else {
+                    System.out.println("Ошибка: только 90, 180 или 270.");
+                }
+            } else {
+                System.out.println("Ошибка: введите число.");
+                scanner.next(); // Очистить неверный ввод
+            }
+        }
+        return angle;
+    }
+
+    // целый поворот
+    private static int[][] rotateMatrix(int[][] matrix, int angle) {
+        int[][] result = matrix;
+        int turns = angle / 90;
+        for (int t = 0; t < turns; t++) {
+            result = rotateMatrix90(result);
+        }
+        return result;
     }
 
     // Поворот
